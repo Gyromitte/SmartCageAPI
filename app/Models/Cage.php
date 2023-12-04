@@ -9,7 +9,17 @@ class Cage extends Model
 {
     use HasFactory;
 
-    public function sensors(){
-        return $this->hasMany(Sensor::class);
+    protected $fillable = [
+        'name', 'description', 'user_id',
+    ];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cageSensors()
+    {
+        return $this->hasMany(CageSensor::class);
     }
 }

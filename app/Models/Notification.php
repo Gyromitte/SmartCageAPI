@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'cage_sensor_id', 'description', 'timestamp',
+    ];
+
+    public function cageSensor()
+    {
+        return $this->belongsTo(CageSensor::class);
+    }
 }
