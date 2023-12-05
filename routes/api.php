@@ -13,3 +13,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('users', UserController::class);
 Route::apiResource('cages', CageController::class);
 Route::get('adafruit', [CageSensorController::class,'adafruit']);
+
+// Ejemplo de cómo debería ser en tu ruta
+Route::post('registro', [UserController::class, 'store']);
