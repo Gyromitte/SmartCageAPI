@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -29,15 +33,18 @@ class UserController extends Controller
         return response()->json(['message' => 'Error creating user', 'errors' => $validator->errors()], 422);
     }
 
-    $user = new User();
-    $user->name = $request->name;
-    $user->lastname = $request->lastname;
-    $user->email = $request->email;
-    $user->password = bcrypt($request->password);
+    $user = User::create([
+        'name' => $request->name,
+        'lastname' => $request->lastname,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    $token = JWTAuth::fromUser($user);
 
     try {
         $user->save();
-        return response()->json(['message' => 'User created successfully'], 201);
+        return response()->json(['message' => 'User created successfully', 'token' => $token], 201);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Error creating user', 'error' => $e->getMessage()], 500);
     }
@@ -78,5 +85,24 @@ class UserController extends Controller
 
         $user->delete();
         return response()->noContent();
+    }
+
+    public function login(LoginRequest $request){
+        $credenciales = $request->only('email', 'password');
+
+        try{
+            if(!$token=JWTAuth::attempt($credenciales)){
+                return response() -> json([
+                    'error' => 'credenciales no válidas'
+                ], 400);
+            }
+        } catch (JWTException $e){
+            return response() -> json([
+                'error' => 'not created token'
+            ], 500);
+        }
+
+        return response()->json(compact('token'));
+
     }
 }
