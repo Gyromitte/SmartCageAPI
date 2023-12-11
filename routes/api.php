@@ -6,13 +6,15 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::apiResource('users', UserController::class);
 Route::apiResource('cages', CageController::class);
 Route::get('adafruit', [CageSensorController::class,'adafruit']);
 
-// Ejemplo de cómo debería ser en tu ruta
-Route::post('registro', [UserController::class, 'store']);
+
+
+Route::post('register', [UserController::class, 'store']);
+Route::post('login', [UserController::class, 'login']);
+
+//protected routes
+Route::middleware('jwt.verify')->group(function(){
+    Route::get('users', [UserController::class, 'index']);
+});
