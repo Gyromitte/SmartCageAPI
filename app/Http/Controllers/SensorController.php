@@ -6,7 +6,7 @@ use App\Models\Sensor;
 use Illuminate\Http\Request;
 
 class SensorController extends Controller
-{
+{   
     /**
      * Display a listing of the resource.
      */

@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Http;
 
 class CageSensorController extends Controller
 {
-    //https://io.adafruit.com/api/v2/Pedro26hiram/groups/jaula
-    public function adafruit(Request $request){
+    public function water(Request $request){
         $response = Http::withHeaders([
-            'X-AIO-Key' => $request->IOA,
+            'X-AIO-Key' => "aio_znOT705Jd39JYlCuN6hwk2zcUFff",
         ])->get('https://io.adafruit.com/api/v2/Pedro26hiram/groups/jaula');
 
         if($response->ok()){
@@ -26,6 +25,7 @@ class CageSensorController extends Controller
             ],$response->status());
         }
     }
+
     /**
      * Display a listing of the resource.
      */
