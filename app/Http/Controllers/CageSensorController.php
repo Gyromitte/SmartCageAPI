@@ -7,11 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class CageSensorController extends Controller
-{
+{   
+    private $AIOKEY = "aio_Qkpv22MBMkdRZOz2v96HxS5TgJMj";
+    private $RUTA = "https://io.adafruit.com/api/v2/Pedro26hiram/feeds"; // Ruta por defecto
+
     public function water(Request $request){
         $response = Http::withHeaders([
-            'X-AIO-Key' => "aio_znOT705Jd39JYlCuN6hwk2zcUFff",
-        ])->get('https://io.adafruit.com/api/v2/Pedro26hiram/groups/jaula');
+            'X-AIO-Key' => $this->AIOKEY,
+        ])->get($this->RUTA . '/jaula.agua/data/last');  // Concatenar las partes que queremos consultar
 
         if($response->ok()){
             return response()->json([
