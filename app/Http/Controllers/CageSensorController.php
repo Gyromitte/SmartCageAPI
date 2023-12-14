@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\CageSensor;
+use App\Models\Cage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -28,6 +30,31 @@ class CageSensorController extends Controller
             ],$response->status());
         }
     }
+
+    public function getSensoresDeJaula($cage_id)
+    {
+        try {
+            // Busca la jaula con el ID proporcionado
+            $cage = Cage::find($cage_id);
+    
+            if (is_null($cage)) {
+                return response()->json(['message' => 'La jaula no fue encontrada'], 404);
+            }
+    
+            // Busca los sensores asociados a la jaula específica
+            $sensors = CageSensor::where('cage_id', $cage_id)->get();
+    
+            if ($sensors->isEmpty()) {
+                return response()->json(['message' => 'No hay sensores disponibles para esta jaula'], 404);
+            }
+        
+            return response()->json($sensors);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al obtener los sensores de la jaula'], 500);
+        }
+    }
+    
+    
 
     /**
      * Display a listing of the resource.
