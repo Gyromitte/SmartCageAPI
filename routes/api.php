@@ -17,4 +17,5 @@ Route::post('login', [UserController::class, 'login']);
 //protected routes
 Route::middleware('jwt.verify')->group(function(){
     Route::get('users', [UserController::class, 'index']);
+    Route::get('cages', [CageController::class,'index']);
 });
