@@ -17,13 +17,17 @@ class SensorController extends Controller
                 return response()->json(['message' => 'El sensor no fue encontrado'], 404);
             }
     
-            // Acceder al nombre del tipo de sensor a través de la relación
+            // Nombre del tipo de sensor
             $sensorTypeName = $sensor->sensorType->name;
-    
+
+            // Unidad del sensor
+            $sensorUnit = $sensor->sensorType->unit;
+
             $data = [
                 'id' => $sensor->id,
                 'sensor_type_name' => $sensorTypeName,
-                'value' => $sensor->value
+                'value' => $sensor->value,
+                'sensor_unit'=> $sensorUnit
             ];
     
             return response()->json($data);
