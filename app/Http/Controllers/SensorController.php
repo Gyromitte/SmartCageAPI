@@ -5,34 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\Sensor;
 use App\Models\CageSensor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class SensorController extends Controller
 {   
-    public function getSensor($sensor_id)
+    private $AIOKEY = "aio_gvmG02nVb9WZ4wjNpsnD1wUE713T";
+    private $RUTA = "https://io.adafruit.com/api/v2/valeriamorales/feeds/"; // Ruta por defecto
+
+    public function getSensorData(Request $request, $sensor_route)
     {
         try {
-            $sensor = Sensor::with('sensorType')->find($sensor_id);
+            // Construir la Url
+            $sensorRoute = $sensor_route . '/data/last';
     
-            if (is_null($sensor)) {
-                return response()->json(['message' => 'El sensor no fue encontrado'], 404);
+            $response = Http::withHeaders([
+                'X-AIO-Key' => $this->AIOKEY,
+            ])->get($this->RUTA . $sensorRoute);
+    
+            if ($response->ok()) {
+                return response()->json([
+                    "msg" => "Si",
+                    "data" => $response->json()
+                ], 200);
+            } else {
+                return response()->json([
+                    "msg" => "No",
+                    "data" => $response->body()
+                ], $response->status());
             }
-    
-            // Nombre del tipo de sensor
-            $sensorTypeName = $sensor->sensorType->name;
-
-            // Unidad del sensor
-            $sensorUnit = $sensor->sensorType->unit;
-
-            $data = [
-                'id' => $sensor->id,
-                'sensor_type_name' => $sensorTypeName,
-                'value' => $sensor->value,
-                'sensor_unit'=> $sensorUnit
-            ];
-    
-            return response()->json($data);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error al obtener el sensor: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Error al obtener los datos del sensor: ' . $e->getMessage()], 500);
         }
     }
     

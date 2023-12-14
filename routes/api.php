@@ -20,11 +20,9 @@ Route::middleware('jwt.verify')->group(function(){
     Route::get('users', [UserController::class, 'index']);
     Route::get('cages', [CageController::class,'index']);
 
-    // Sensors
+    // Get sensors values
+    Route::get('cages/sensors/{sensor_route}', [SensorController::class, 'getSensorData']);
 
     // Get sensors from cage
     Route::get('cages/{jaula_id}/sensors', [CageSensorController::class, 'getSensoresDeJaula']);
-    // Get sensors values
-    Route::get('cages/sensors/{sensor_id}', [SensorController::class, 'getSensor']);
-
 });

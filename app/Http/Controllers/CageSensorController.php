@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\CageSensor;
-use App\Models\Cage;
+use App\Models\Cages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -16,7 +16,7 @@ class CageSensorController extends Controller
     public function water(Request $request){
         $response = Http::withHeaders([
             'X-AIO-Key' => $this->AIOKEY,
-        ])->get($this->RUTA . '/jaula.agua/data/last');  // Concatenar las partes que queremos consultar
+        ])->get($this->RUTA . '/jaula.agua/data/last');
 
         if($response->ok()){
             return response()->json([
