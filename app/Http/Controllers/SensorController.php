@@ -10,26 +10,29 @@ class SensorController extends Controller
 {   
     public function getSensor($sensor_id)
     {
-        try
-        {
-            // Buscar el sensor con el id
-            $sensor  = Sensor::find($sensor_id);
-
+        try {
+            $sensor = Sensor::with('sensorType')->find($sensor_id);
+    
             if (is_null($sensor)) {
                 return response()->json(['message' => 'El sensor no fue encontrado'], 404);
             }
-
-            // Obtener el sensor
-            $sensor = Sensor::where('sensor_id', $sensor_id)->get();
-
-            if ($sensor->isEmpty()) {
-                return response()->json(['message' => 'El sensor no tenia valores que retornar'], 404);
-            }
-            return response()->json($sensor);
-        }catch (\Exception $e) {
-            return response()->json(['message' => 'Error al obtener el sensor'], 500);
+    
+            // Acceder al nombre del tipo de sensor a través de la relación
+            $sensorTypeName = $sensor->sensorType->name;
+    
+            $data = [
+                'id' => $sensor->id,
+                'sensor_type_name' => $sensorTypeName,
+                'value' => $sensor->value
+            ];
+    
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al obtener el sensor: ' . $e->getMessage()], 500);
         }
     }
+    
+    
 
     /**
      * Display a listing of the resource.
