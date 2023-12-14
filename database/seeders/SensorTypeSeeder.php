@@ -14,12 +14,12 @@ class SensorTypeSeeder extends Seeder
     public function run(): void
     {
         $sensorTypes = [
-            ['name' => 'waterLevel', 'unit' => '%'],
-            ['name' => 'gas', 'unit' => 'ppm'],
-            ['name' => 'weightFood', 'unit' => 'kg'],
-            ['name' => 'thermisor', 'unit' => '°C'],
-            ['name' => 'infrared', 'unit' => ''],
-            ['name' => 'sound', 'unit' => ''],
+            ['name' => 'Agua', 'unit' => '%'],
+            ['name' => 'Gas', 'unit' => 'ppm'],
+            ['name' => 'Comida', 'unit' => 'kg'],
+            ['name' => 'Temperatura', 'unit' => '°C'],
+            ['name' => 'Proximidad', 'unit' => ''],
+            ['name' => 'Ruido', 'unit' => ''],
         ];
         DB::table('sensor_types')->insert($sensorTypes);
     }

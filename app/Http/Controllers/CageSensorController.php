@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\CageSensor;
-use App\Models\Cages;
+use App\Models\Cage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class CageSensorController extends Controller
 {   
@@ -42,7 +43,14 @@ class CageSensorController extends Controller
             }
     
             // Busca los sensores asociados a la jaula específica
-            $sensors = CageSensor::where('cage_id', $cage_id)->get();
+            $sensors = DB::table('cage_sensors')
+            ->join('cages', 'cage_sensors.cage_id', '=', 'cages.id')
+            ->join('sensors', 'sensors.id', '=', 'cage_sensors.sensor_id')
+            ->join('sensor_types', 'sensor_types.id', '=', 'sensors.sensor_type_id')
+            ->select('cage_sensors.id', 'sensor_types.name')
+            ->where('cages.id', $cage_id)
+            ->get();
+
     
             if ($sensors->isEmpty()) {
                 return response()->json(['message' => 'No hay sensores disponibles para esta jaula'], 404);
