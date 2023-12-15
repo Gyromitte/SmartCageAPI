@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class SensorController extends Controller
 {   
-    private $AIOKEY = "aio_gvmG02nVb9WZ4wjNpsnD1wUE713T";
+    private $AIOKEY = "aio_wvAY25yxHs8w72JK2BNRDNjUmgEg";
     private $RUTA = "https://io.adafruit.com/api/v2/valeriamorales/feeds/"; // Ruta por defecto
 
     public function getSensorData(Request $request, $sensor_route)
@@ -37,8 +37,36 @@ class SensorController extends Controller
             return response()->json(['message' => 'Error al obtener los datos del sensor: ' . $e->getMessage()], 500);
         }
     }
-    
-    
+
+    public function enviarDatos(Request $request, $sensor_route, $dato)
+    {
+        try {
+            // Construir la URL del feed
+            $sensorRoute = $sensor_route . '/data';
+            $url = $this->RUTA . $sensorRoute;
+
+            $response = Http::withHeaders([
+                'X-AIO-Key' => $this->AIOKEY,
+                'Content-Type' => 'application/json',
+            ])->post($url, [
+                'value' => $dato // dato que se enviara al feed
+            ]);
+
+            if ($response->successful()) {
+                return response()->json([
+                    "msg" => "Dato enviado correctamente a Adafruit",
+                    "data" => $response->json()
+                ], 200);
+            } else {
+                return response()->json([
+                    "msg" => "Error al enviar el dato a Adafruit",
+                    "data" => $response->body()
+                ], $response->status());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al enviar los datos al feed de Adafruit: ' . $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Display a listing of the resource.
