@@ -25,4 +25,7 @@ Route::middleware('jwt.verify')->group(function(){
 
     // Get sensors from cage
     Route::get('cages/{jaula_id}/sensors', [CageSensorController::class, 'getSensoresDeJaula']);
+
+    // Send data 
+    Route::post('/datos/{sensor_route}/{dato}', [SensorController::class, 'enviarDatos']);
 });
