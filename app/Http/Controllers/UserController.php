@@ -91,22 +91,32 @@ class UserController extends Controller
 
     public function login(LoginRequest $request){
         $credenciales = $request->only('email', 'password');
-
-        try{
-            if(!$token=JWTAuth::attempt($credenciales)){
-                return response() -> json([
-                    'error' => 'credenciales no válidas'
+    
+        try {
+            if (!$token = JWTAuth::attempt($credenciales)) {
+                $error = 'Credenciales no válidas';
+                if (!User::where('email', $credenciales['email'])->first()) {
+                    return response()->json([
+                        'error'=>'Correo incorrecto'
+                    ]);
+                }
+                if (!User::where('email', $credenciales['email'])->where('password', bcrypt($credenciales['password']))->first()) {
+                    $error = 'Contraseña incorrecta';
+                }
+                return response()->json([
+                    'error' => $error,
                 ], 400);
             }
-        } catch (JWTException $e){
-            return response() -> json([
-                'error' => 'not created token'
+        } catch (JWTException $e) {
+            return response()->json([
+                'error' => 'No se pudo crear el token',
+                'details' => $e->getMessage(),
             ], 500);
         }
-
+    
         return response()->json(compact('token'));
-
     }
+    
 
     public function logout()
     {
