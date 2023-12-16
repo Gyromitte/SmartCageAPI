@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -104,5 +106,12 @@ class UserController extends Controller
 
         return response()->json(compact('token'));
 
+    }
+
+    public function logout()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        Auth::logout();
+        return response()->json(['message' => 'Logout exitoso']);
     }
 }

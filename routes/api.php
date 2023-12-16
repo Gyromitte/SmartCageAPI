@@ -18,6 +18,9 @@ Route::post('login', [UserController::class, 'login']);
 //protected routes
 Route::middleware('jwt.verify')->group(function(){
     Route::get('users', [UserController::class, 'index']);
+    Route::post('logout', [UserController::class, 'logout']);
+
+
     Route::get('cages', [CageController::class,'index']);
 
     // Get sensors values
