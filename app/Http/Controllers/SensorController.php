@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class SensorController extends Controller
 {   
-    private $AIOKEY = "aio_wvAY25yxHs8w72JK2BNRDNjUmgEg";
+    private $AIOKEY = "aio_mBLL88G7WIioCRBNkAu2IwqXcBK8";
     private $RUTA = "https://io.adafruit.com/api/v2/valeriamorales/feeds/"; // Ruta por defecto
 
     public function getSensorData(Request $request, $sensor_route)

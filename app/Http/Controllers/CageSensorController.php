@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class CageSensorController extends Controller
 {   
-    private $AIOKEY = "aio_mWEQ53yPHSJ1vQrk9VwaPGyCwxNt";
+    private $AIOKEY = "aio_mBLL88G7WIioCRBNkAu2IwqXcBK8";
     private $RUTA = "https://io.adafruit.com/api/v2/valeriamorales/feeds"; // Ruta por defecto
 
     public function water(Request $request){
