@@ -65,14 +65,35 @@ class UserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->lastname = $request->lastname;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->update();
+{
+    $user = User::find($id);
+
+    if (is_null($user)) {
+        return response()->json(['message' => 'User not found'], 404);
     }
+
+    $validator = Validator::make($request->all(), [
+        'name' => 'string|max:255',
+        'lastname' => 'string|max:255',
+        'email' => 'email|unique:users,email,' . $user->id,
+        'password' => 'string|min:6',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['message' => 'Error updating user', 'errors' => $validator->errors()], 422);
+    }
+
+    // Actualiza solo los campos proporcionados en la solicitud
+    $user->fill($request->only(['name', 'lastname', 'email', 'password']));
+
+    try {
+        $user->save();
+        return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error updating user', 'error' => $e->getMessage()], 500);
+    }
+}
+    
 
     /**
      * Remove the specified resource from storage.
