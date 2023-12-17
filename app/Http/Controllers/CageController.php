@@ -34,6 +34,36 @@ class CageController extends Controller
             return response()->json(['message' => 'Error al obtener el usuario autenticado'], 500);
         }
     }
+
+    public function createCageForUser(Request $request)
+    {
+        try {
+            // Intenta obtener el usuario desde el token JWT
+            $user = JWTAuth::parseToken()->authenticate();
+    
+            // Obtén los datos validados de la solicitud
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'description' => 'required',
+            ], [ 
+                'name.required' => 'El nombre de la jaula es obligatorio',
+                'description.required' => 'La descripción de la jaula es obligatoria',
+            ]);
+    
+            // Crea la jaula asociada al usuario autenticado
+            $cage = Cage::create([
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'user_id' => $user->id, // Asigna el user_id del usuario autenticado
+            ]);
+    
+            return response()->json(['message' => 'Jaula creada con éxito', 'cage' => $cage], 201);
+        } catch (\Exception $e) {
+            // Manejo de errores, por ejemplo, el token es inválido
+            return response()->json(['message' => 'Error al crear la jaula'], 500);
+        }
+    }
+    
     
     /**
      * Store a newly created resource in storage.

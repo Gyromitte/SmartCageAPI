@@ -20,9 +20,11 @@ Route::middleware('jwt.verify')->group(function(){
     Route::get('users', [UserController::class, 'index']);
     Route::post('logout', [UserController::class, 'logout']);
 
-
+    // Cages
     Route::get('cages', [CageController::class,'index']);
+    Route::post('cages/create', [CageController::class, 'createCageForUser']);
 
+    // Sensors
     // Get sensors values
     Route::get('cages/sensors/{sensor_route}', [SensorController::class, 'getSensorData']);
 
