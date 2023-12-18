@@ -14,9 +14,14 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return User::all();
+        $user = $request->user();
+
+        return response()->json([
+            'user' => $user,
+            'message' => 'Información de la cuenta recuperada correctamente',
+        ]);
     }
 
     /**
